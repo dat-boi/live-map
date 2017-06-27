@@ -1,15 +1,19 @@
 (ns live-map.core
-    (:require [reagent.core :as reagent :refer [atom]]
-              [reagent.session :as session]
-              [secretary.core :as secretary :include-macros true]
-              [accountant.core :as accountant]))
+  (:require [reagent.core :as reagent :refer [atom]]
+            [reagent.session :as session]
+            [secretary.core :as secretary :include-macros true]
+            [accountant.core :as accountant]
+            [live-map.geo :as geo]))
 
 ;; -------------------------
 ;; Views
 
 (defn home-page []
   [:div [:h2 "Welcome to live-map"]
-   [:div [:a {:href "/about"} "go to about page"]]])
+   [:div
+    [:a {:href "/about"} "go to about page"]
+    (geo/albers-us)
+    ]])
 
 (defn about-page []
   [:div [:h2 "About live-map"]
@@ -31,7 +35,8 @@
 ;; Initialize app
 
 (defn mount-root []
-  (reagent/render [current-page] (.getElementById js/document "app")))
+  (reagent/render [current-page] (.getElementById js/document "app"))
+  (geo/map-with-d3-instructions))
 
 (defn init! []
   (accountant/configure-navigation!
